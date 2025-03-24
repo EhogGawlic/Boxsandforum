@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Boxsand forum</title>
+        <link rel="stylesheet" href="public/style.css">
+    </head>
+    <body>
+        <div class="section1">
+            <h1>Ze Boxsand forum</h1>
+            <button id="signup-button">Sign Up</button><br>
+            <p>Already have an account?</p><br>
+            <button id="login-button">Log In</button><br>
+            Signed in as <span id="loggedinas">you r not logd in</span>
+            <form action="/" method="POST"><button type="submit">Refresh</button></form>
+        </div>
+        <div class="section1">
+            <h2>POSTS</h2>
+            <div id="posts" class="section2">
+                <%- posts %><!-- This will be replaced with server-side code to render posts dynamically -->
+            </div>
+            <h2>UPDATE REQUESTS</h2>
+            <div id="requests" class="section2">
+                <%- reqs %>
+            </div>
+            <span id="lastreq" style="display:none"><%- lastreq %></span>
+            <span id="loggedinas" style="display:none"><%- username %></span>
+        </div>
+        <div class="section1">
+            <h2>Post</h2>
+            <form id="post-form" action="/posted.html" method="POST">
+                <input name="name" type="text" id="name" placeholder="Title" required><br>
+                <input name="file" type="file" id="file"><br>
+                <input name="filename" type="text" value="save"><br>
+                <textarea id="post-content" name="data" rows="4" cols="50" placeholder="Write your post here..."></textarea><br>
+                <!--
+                <label for="post-content">Preview</label><br>
+                <div id="post-preview" class="section2">Your post will appear here...</div><br>
+                <label for="options">Options</label><br>
+                <div id="options">
+                    <button class="pbtn">Upload</button>
+                    <button class="pbtn">Header</button>
+                    <button class="pbtn">Bold</button>
+                    <button class="pbtn">Italic</button>
+                    <button class="pbtn">Underline</button>
+                    <button class="pbtn">List</button>
+                </div><br>
+                -->
+                <button type="submit" id="post-button">Send</button>
+                <input name="fileh" type="text" id="filehidden" style="display:none">
+            </form>
+            <form action="/endsession.html" method="POST"><button type="submit">End session</button></form>
+        </div>
+        <div class="section1" style="display:block" id="requestdiv">
+            <h2>REQUEST UPDATE</h2>
+            <form id="req-form" action="/req.html" method="POST">
+                <input name="title" type="text" placeholder="Title" required><br>
+                <textarea name="text" rows="4" cols="50" placeholder="Type in request here" required></textarea><br>
+                <button type="submit">Submit</button>
+            </form>
+        </div>
+        <script>
+            document.getElementById('signup-button').addEventListener('click', function() {
+                window.location.href = 'public/signup.html'; // Redirect to signup page
+            });
+
+            document.getElementById('login-button').addEventListener('click', function() {
+                window.location.href = 'public/login.html'; // Redirect to login page
+            });
+            document.getElementById('post-content').addEventListener('change', function() {
+                document.getElementById('post-preview').innerText = document.getElementById("post-content").value; // Update preview as user types
+            });
+            document.getElementById('file').addEventListener("change", function(){
+
+                const fr = new FileReader()
+                fr.onload = function(){
+                    document.getElementById("filehidden").value = fr.result
+                }
+                fr.readAsText(document.getElementById("file").files[0])
+            })
+            if (parseFloat(document.getElementById("lastreq").innerHTML) >= new Date().getTime()-1000*60*60*36){
+                document.getElementById("requestdiv").style.display="none"
+            }
+        </script>
+    </body>
+</html>
